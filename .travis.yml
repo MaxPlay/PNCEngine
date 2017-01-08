@@ -1,3 +1,2 @@
 language: csharp
 solution: PNCEngine.sln
-script: rsync -avx --delete --progress "/lib" / "/PNCEngine/x86/bin/"
