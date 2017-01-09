@@ -8,6 +8,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System;
+using System.Xml;
 
 namespace PNCEngine.UI.Internal
 {
@@ -373,6 +374,16 @@ namespace PNCEngine.UI.Internal
                     }
                     break;
             }
+        }
+
+        public override void Serialize(XmlWriter writer)
+        {
+
+        }
+
+        public override void Deserialize(XmlReader reader)
+        {
+
         }
 
         #endregion Private Methods

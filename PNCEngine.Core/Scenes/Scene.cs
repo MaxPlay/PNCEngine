@@ -83,7 +83,7 @@ namespace PNCEngine.Core.Scenes
                 throw new SceneFileNotFoundException(filename);
 
             string content = ZipCompressor.Unzip(File.ReadAllBytes(filename));
-            
+
             using (StringReader stream = new StringReader(content))
             {
                 using (XmlReader reader = XmlReader.Create(stream))
@@ -93,6 +93,42 @@ namespace PNCEngine.Core.Scenes
                     LoadEntities(reader);
                 }
             }
+        }
+
+        public void Save()
+        {
+            if (File.Exists(filename))
+                File.Delete(filename);
+
+            string content = string.Empty;
+
+            using (StringWriter stream = new StringWriter())
+            {
+                using (XmlWriter writer = XmlWriter.Create(stream))
+                {
+                    SaveTextures(writer);
+                    SaveAudio(writer);
+                    SaveEntities(writer);
+                }
+
+                content = stream.ToString();
+            }
+            File.WriteAllBytes(filename, ZipCompressor.Zip(content));
+        }
+
+        private void SaveEntities(XmlWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveAudio(XmlWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveTextures(XmlWriter writer)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(float elapsedTime)

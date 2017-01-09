@@ -1,5 +1,6 @@
 ﻿using PNCEngine.UI.Interfaces;
 using SFML.System;
+using System.Xml;
 
 namespace PNCEngine.UI.Internal
 {
@@ -69,6 +70,10 @@ namespace PNCEngine.UI.Internal
         protected abstract void subscribe();
 
         protected abstract void unsubscribe();
+
+        public abstract void Serialize(XmlWriter writer);
+
+        public abstract void Deserialize(XmlReader reader);
 
         #endregion Protected Methods
     }
