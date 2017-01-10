@@ -118,17 +118,27 @@ namespace PNCEngine.Core.Scenes
 
         private void SaveEntities(XmlWriter writer)
         {
-            throw new NotImplementedException();
+
         }
 
         private void SaveAudio(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteStartElement("audio");
+            foreach (int i in loadedTextures)
+            {
+                AssetManager.GetAudio(i).SaveXML(writer);
+            }
+            writer.WriteEndElement();
         }
 
         private void SaveTextures(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteStartElement("textures");
+            foreach (int i in loadedTextures)
+            {
+                AssetManager.GetTexture(i).SaveXML(writer);
+            }
+            writer.WriteEndElement();
         }
 
         public void Update(float elapsedTime)
@@ -142,17 +152,63 @@ namespace PNCEngine.Core.Scenes
 
         private void LoadAudio(XmlReader reader)
         {
+            if (reader.AttributeCount > 0)
+            {
+                int count = 0;
+                if (!int.TryParse(reader.GetAttribute("count"), out count))
+                    return;
+                this.loadedAudio = new int[count];
+            }
 
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "audio")
+                    return;
+
+                if (reader.NodeType == XmlNodeType.Element && reader.Name.ToLower() == "audiosource")
+                {
+                    if (reader.AttributeCount > 0)
+                    {
+                        int id = AssetManager.AquireAudio(reader.GetAttribute("filename"));
+                        AssetManager.GetAudio(id).LoadXML(reader);
+                    }
+                }
+            }
         }
 
         private void LoadEntities(XmlReader reader)
         {
-
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "entities")
+                    return;
+            }
         }
 
         private void LoadTextures(XmlReader reader)
         {
+            if (reader.AttributeCount > 0)
+            {
+                int count = 0;
+                if (!int.TryParse(reader.GetAttribute("count"), out count))
+                    return;
+                this.loadedTextures = new int[count];
+            }
 
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "textures")
+                    return;
+
+                if (reader.NodeType == XmlNodeType.Element && reader.Name.ToLower() == "texture")
+                {
+                    if (reader.AttributeCount > 0)
+                    {
+                        int id = AssetManager.AquireTexture(reader.GetAttribute("filename"));
+                        AssetManager.GetTexture(id).LoadXML(reader);
+                    }
+                }
+            }
         }
 
         #endregion Private Methods

@@ -1,5 +1,7 @@
 ﻿using SFML.Audio;
 using System.IO;
+using System;
+using System.Xml;
 
 namespace PNCEngine.Assets
 {
@@ -85,6 +87,16 @@ namespace PNCEngine.Assets
                 throw new FileNotFoundException(filename);
 
             return resource != null;
+        }
+
+        public void LoadXML(XmlReader reader)
+        {
+
+        }
+
+        public void SaveXML(XmlWriter writer)
+        {
+
         }
 
         #endregion Public Methods
