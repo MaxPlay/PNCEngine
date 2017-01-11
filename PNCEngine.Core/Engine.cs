@@ -14,11 +14,11 @@ namespace PNCEngine.Core
 
         private static Engine instance;
 
-        private bool running;
-        private EngineWindow window;
         private Clock clock;
         private float elapsedFixedUpdateTime;
         private float fixedUpdateTime;
+        private bool running;
+        private EngineWindow window;
 
         #endregion Private Fields
 
@@ -75,6 +75,17 @@ namespace PNCEngine.Core
             Debug.Instance.Save();
         }
 
+        public void Draw(Time elapsedTime)
+        {
+            window.Clear();
+            SceneManager.Draw(elapsedTime.AsSeconds());
+        }
+
+        public void FixedUpdate()
+        {
+            SceneManager.FixedUpdate(elapsedFixedUpdateTime);
+        }
+
         public void Run()
         {
             Time elapsedTime = clock.ElapsedTime;
@@ -91,26 +102,15 @@ namespace PNCEngine.Core
             }
         }
 
-        public void Draw(Time elapsedTime)
-        {
-            window.Clear();
-            SceneManager.Draw(elapsedTime.AsSeconds());
-        }
-
         public void Update(Time elapsedTime)
         {
             elapsedFixedUpdateTime += elapsedTime.AsSeconds();
-            if(elapsedFixedUpdateTime >= fixedUpdateTime)
+            if (elapsedFixedUpdateTime >= fixedUpdateTime)
             {
                 FixedUpdate();
                 elapsedFixedUpdateTime = 0;
             }
             SceneManager.Update(elapsedTime.AsSeconds());
-        }
-
-        public void FixedUpdate()
-        {
-            SceneManager.FixedUpdate(elapsedFixedUpdateTime);
         }
 
         #endregion Public Methods

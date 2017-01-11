@@ -1,11 +1,12 @@
 ﻿using SFML.Audio;
 using System.IO;
-using System;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace PNCEngine.Assets
 {
-    public class AudioAsset : Asset<SoundBuffer>
+    public class AudioAsset : Asset<SoundBuffer>, IXmlSerializable
     {
         #region Private Fields
 
@@ -62,6 +63,11 @@ namespace PNCEngine.Assets
             return clone;
         }
 
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
         public override bool Load()
         {
             if (File.Exists(filename))
@@ -89,14 +95,15 @@ namespace PNCEngine.Assets
             return resource != null;
         }
 
-        public void LoadXML(XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
-
         }
 
-        public void SaveXML(XmlWriter writer)
+        public void WriteXml(XmlWriter writer)
         {
-
+            writer.WriteStartElement("audiosource");
+            writer.WriteAttributeString("filename", filename);
+            writer.WriteEndElement();
         }
 
         #endregion Public Methods

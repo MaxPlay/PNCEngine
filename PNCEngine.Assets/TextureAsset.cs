@@ -1,45 +1,25 @@
-﻿using SFML.Graphics;
+﻿using PNCEngine.Assets.Importers;
+using SFML.Graphics;
+using SFML.System;
 using System.Collections.Generic;
 using System.IO;
-using System;
-using SFML.System;
 using System.Xml;
-using PNCEngine.Assets.Importers;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace PNCEngine.Assets
 {
-    public class TextureAsset : Asset<Texture>
+    public class TextureAsset : Asset<Texture>, IXmlSerializable
     {
         #region Private Fields
 
+        private static Dictionary<string, Attributes> elements;
         private int height;
 
-        private int width;
-
         private bool repeated;
-
-        private static Dictionary<string, Attributes> elements;
-
-        public bool Repeated
-        {
-            get { return repeated; }
-            set { repeated = value; resource.Repeated = value; }
-        }
-
         private bool smooth;
-
-        public bool Smooth
-        {
-            get { return smooth; }
-            set { smooth = value; resource.Smooth = value; }
-        }
-
         private Dictionary<int, IntRect> sprites;
-
-        public Dictionary<int, IntRect> Sprites
-        {
-            get { return sprites; }
-        }
+        private int width;
 
         #endregion Private Fields
 
@@ -55,19 +35,40 @@ namespace PNCEngine.Assets
             }
         }
 
-        enum Attributes
+        #endregion Public Constructors
+
+        #region Private Enums
+
+        private enum Attributes
         {
             Smooth,
             Repeated
         }
 
-        #endregion Public Constructors
+        #endregion Private Enums
 
         #region Public Properties
 
         public int Height
         {
             get { return height; }
+        }
+
+        public bool Repeated
+        {
+            get { return repeated; }
+            set { repeated = value; resource.Repeated = value; }
+        }
+
+        public bool Smooth
+        {
+            get { return smooth; }
+            set { smooth = value; resource.Smooth = value; }
+        }
+
+        public Dictionary<int, IntRect> Sprites
+        {
+            get { return sprites; }
         }
 
         public int Width
@@ -85,6 +86,18 @@ namespace PNCEngine.Assets
             clone.resource = new Texture(resource.CopyToImage());
             clone.assignNewID();
             return clone;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public IntRect GetSprite(int frame)
+        {
+            if (sprites == null || !sprites.ContainsKey(frame))
+                return new IntRect(new Vector2i(), new Vector2i((int)resource.Size.X, (int)resource.Size.Y));
+            return sprites[frame];
         }
 
         public override bool Load()
@@ -107,14 +120,7 @@ namespace PNCEngine.Assets
             return resource != null;
         }
 
-        public IntRect GetSprite(int frame)
-        {
-            if (sprites == null || !sprites.ContainsKey(frame))
-                return new IntRect(new Vector2i(), new Vector2i((int)resource.Size.X, (int)resource.Size.Y));
-            return sprites[frame];
-        }
-
-        public void LoadXML(XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
             while (reader.Read())
             {
@@ -136,6 +142,7 @@ namespace PNCEngine.Assets
                                     return;
                                 Smooth = smooth > 0;
                                 break;
+
                             case Attributes.Repeated:
                                 if (reader.IsEmptyElement)
                                     return;
@@ -150,7 +157,7 @@ namespace PNCEngine.Assets
             }
         }
 
-        public void SaveXML(XmlWriter writer)
+        public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("texture");
             writer.WriteAttributeString("filename", filename);

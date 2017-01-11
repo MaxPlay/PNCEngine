@@ -139,6 +139,10 @@ namespace PNCEngine.UI.Internal
 
         #region Public Methods
 
+        public override void Deserialize(XmlReader reader)
+        {
+        }
+
         public virtual void Draw(object sender, UIDrawEventArgs args)
         {
             switch (handle)
@@ -185,6 +189,10 @@ namespace PNCEngine.UI.Internal
         {
             boundingbox.Height = AssetManager.GetTexture(texture).Height;
             boundingbox.Width = AssetManager.GetTexture(texture).Width;
+        }
+
+        public override void Serialize(XmlWriter writer)
+        {
         }
 
         public virtual void SetPosition(GuiHandle handle, Vector2f position)
@@ -374,16 +382,6 @@ namespace PNCEngine.UI.Internal
                     }
                     break;
             }
-        }
-
-        public override void Serialize(XmlWriter writer)
-        {
-
-        }
-
-        public override void Deserialize(XmlReader reader)
-        {
-
         }
 
         #endregion Private Methods

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PNCEngine.Utils.Extensions
 {
     public static class ComparableExtension
     {
+        #region Public Methods
+
         public static T Clamp<T>(this T val, T min, T max) where T : IComparable<T>
         {
             if (val.CompareTo(min) < 0)
@@ -16,5 +14,7 @@ namespace PNCEngine.Utils.Extensions
                 return max;
             return val;
         }
+
+        #endregion Public Methods
     }
 }

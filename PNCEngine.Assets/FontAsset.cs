@@ -38,6 +38,19 @@ namespace PNCEngine.Assets
             return clone;
         }
 
+        public FloatRect GetDimensions(string text, uint size = 20)
+        {
+            Text tempText = new Text(text, resource, size);
+            return tempText.GetLocalBounds();
+        }
+
+        public FloatRect GetDimensions(string text, uint size, Text.Styles style)
+        {
+            Text tempText = new Text(text, resource, size);
+            tempText.Style = style;
+            return tempText.GetLocalBounds();
+        }
+
         public Glyph GetGlyph(int codePoint, int characterSize, bool bold)
         {
             return resource.GetGlyph((uint)codePoint, (uint)characterSize, bold);
@@ -56,19 +69,6 @@ namespace PNCEngine.Assets
                 throw new FileNotFoundException(filename);
 
             return resource != null;
-        }
-
-        public FloatRect GetDimensions(string text, uint size = 20)
-        {
-            Text tempText = new Text(text, resource, size);
-            return tempText.GetLocalBounds();
-        }
-
-        public FloatRect GetDimensions(string text, uint size, Text.Styles style)
-        {
-            Text tempText = new Text(text, resource, size);
-            tempText.Style = style;
-            return tempText.GetLocalBounds();
         }
 
         #endregion Public Methods

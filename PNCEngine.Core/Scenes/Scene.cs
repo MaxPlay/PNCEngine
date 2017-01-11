@@ -1,12 +1,11 @@
 ﻿using PNCEngine.Assets;
 using PNCEngine.Rendering;
-using PNCEngine.Utils.Exceptions;
-using System.IO;
-using System;
-using SFML.Graphics;
-using System.Xml;
-using System.IO.Compression;
 using PNCEngine.Utils;
+using PNCEngine.Utils.Exceptions;
+using SFML.Graphics;
+using System;
+using System.IO;
+using System.Xml;
 
 namespace PNCEngine.Core.Scenes
 {
@@ -34,13 +33,6 @@ namespace PNCEngine.Core.Scenes
         {
             this.name = name;
             this.filename = filename;
-        }
-
-        public void SetRenderTarget(RenderTarget target)
-        {
-            spriteBatch = null;
-            GC.Collect();
-            spriteBatch = new SpriteBatch(target);
         }
 
         #endregion Public Constructors
@@ -116,29 +108,11 @@ namespace PNCEngine.Core.Scenes
             File.WriteAllBytes(filename, ZipCompressor.Zip(content));
         }
 
-        private void SaveEntities(XmlWriter writer)
+        public void SetRenderTarget(RenderTarget target)
         {
-
-        }
-
-        private void SaveAudio(XmlWriter writer)
-        {
-            writer.WriteStartElement("audio");
-            foreach (int i in loadedTextures)
-            {
-                AssetManager.GetAudio(i).SaveXML(writer);
-            }
-            writer.WriteEndElement();
-        }
-
-        private void SaveTextures(XmlWriter writer)
-        {
-            writer.WriteStartElement("textures");
-            foreach (int i in loadedTextures)
-            {
-                AssetManager.GetTexture(i).SaveXML(writer);
-            }
-            writer.WriteEndElement();
+            spriteBatch = null;
+            GC.Collect();
+            spriteBatch = new SpriteBatch(target);
         }
 
         public void Update(float elapsedTime)
@@ -170,7 +144,7 @@ namespace PNCEngine.Core.Scenes
                     if (reader.AttributeCount > 0)
                     {
                         int id = AssetManager.AquireAudio(reader.GetAttribute("filename"));
-                        AssetManager.GetAudio(id).LoadXML(reader);
+                        AssetManager.GetAudio(id).ReadXml(reader);
                     }
                 }
             }
@@ -205,10 +179,34 @@ namespace PNCEngine.Core.Scenes
                     if (reader.AttributeCount > 0)
                     {
                         int id = AssetManager.AquireTexture(reader.GetAttribute("filename"));
-                        AssetManager.GetTexture(id).LoadXML(reader);
+                        AssetManager.GetTexture(id).ReadXml(reader);
                     }
                 }
             }
+        }
+
+        private void SaveAudio(XmlWriter writer)
+        {
+            writer.WriteStartElement("audio");
+            foreach (int i in loadedTextures)
+            {
+                AssetManager.GetAudio(i).WriteXml(writer);
+            }
+            writer.WriteEndElement();
+        }
+
+        private void SaveEntities(XmlWriter writer)
+        {
+        }
+
+        private void SaveTextures(XmlWriter writer)
+        {
+            writer.WriteStartElement("textures");
+            foreach (int i in loadedTextures)
+            {
+                AssetManager.GetTexture(i).WriteXml(writer);
+            }
+            writer.WriteEndElement();
         }
 
         #endregion Private Methods

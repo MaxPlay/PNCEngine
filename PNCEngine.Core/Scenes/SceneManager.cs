@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using SFML.System;
-using System.IO;
+﻿using PNCEngine.Utils;
 using PNCEngine.Utils.Exceptions;
-using PNCEngine.Utils;
+using System.Collections.Generic;
+using System.IO;
 
 namespace PNCEngine.Core.Scenes
 {
@@ -12,20 +10,34 @@ namespace PNCEngine.Core.Scenes
         #region Private Fields
 
         private const string SRC_FILE = "scenes.cat";
+        private static Scene currentScene;
         private static Dictionary<string, string> scenes;
         private static string startup;
-        private static Scene currentScene;
         private static EngineWindow targetWindow;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         public static EngineWindow TargetWindow
         {
             get { return targetWindow; }
             set { targetWindow = value; }
         }
-        
-        #endregion Private Fields
+
+        #endregion Public Properties
 
         #region Public Methods
+
+        public static void Draw(float elapsedTime)
+        {
+            currentScene?.Draw(elapsedTime);
+        }
+
+        public static void FixedUpdate(float elapsedTime)
+        {
+            currentScene?.FixedUpdate(elapsedTime);
+        }
 
         public static void Initialize()
         {
@@ -35,7 +47,7 @@ namespace PNCEngine.Core.Scenes
 
         public static Scene LoadScene(string name)
         {
-            if(!scenes.ContainsKey(name ?? ""))
+            if (!scenes.ContainsKey(name ?? ""))
             {
                 Debug.LogError("The scene \"{0}\" does not exist.", name);
                 return null;
@@ -45,6 +57,11 @@ namespace PNCEngine.Core.Scenes
             scene.Load();
             scene.SetRenderTarget(targetWindow);
             return scene;
+        }
+
+        public static void Update(float elapsedTime)
+        {
+            currentScene?.Update(elapsedTime);
         }
 
         #endregion Public Methods
@@ -73,21 +90,6 @@ namespace PNCEngine.Core.Scenes
             }
 
             currentScene = LoadScene(startup);
-        }
-
-        public static void FixedUpdate(float elapsedTime)
-        {
-            currentScene?.FixedUpdate(elapsedTime);
-        }
-
-        public static void Update(float elapsedTime)
-        {
-            currentScene?.Update(elapsedTime);
-        }
-
-        public static void Draw(float elapsedTime)
-        {
-            currentScene?.Draw(elapsedTime);
         }
 
         #endregion Private Methods

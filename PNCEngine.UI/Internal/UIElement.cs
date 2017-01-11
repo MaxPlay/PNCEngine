@@ -65,15 +65,19 @@ namespace PNCEngine.UI.Internal
 
         #endregion Public Properties
 
+        #region Public Methods
+
+        public abstract void Deserialize(XmlReader reader);
+
+        public abstract void Serialize(XmlWriter writer);
+
+        #endregion Public Methods
+
         #region Protected Methods
 
         protected abstract void subscribe();
 
         protected abstract void unsubscribe();
-
-        public abstract void Serialize(XmlWriter writer);
-
-        public abstract void Deserialize(XmlReader reader);
 
         #endregion Protected Methods
     }
