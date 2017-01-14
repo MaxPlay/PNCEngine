@@ -1,312 +1,135 @@
-﻿using PNCEngine.Core.Interfaces;
-using PNCEngine.Core.Scenes;
+﻿using PNCEngine.Core.Attributes;
+using PNCEngine.Core.Components;
+using PNCEngine.Utils.Exceptions;
 using PNCEngine.Utils.Extensions;
-using SFML.System;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace PNCEngine.Core
 {
-    public class GameObject : IEquatable<GameObject>, IEnumerable<IScenegraphElement>, ITransform, IGameObject, IXmlSerializable
+    [RequireComponent(typeof(Transform))]
+    public sealed class GameObject : EngineObject
     {
         #region Private Fields
 
-        private static long newID;
-        private List<IScenegraphElement> children;
-        private bool enabled;
-        private long id;
-        private string name;
-        private IScenegraphElement parent;
-        private Vector2f position;
-        private float rotation;
-
-        private Vector2f scale;
-
-        private Scenegraph scenegraph;
+        private List<Component> components;
+        private bool isStatic;
+        private Transform transform;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public GameObject() : this(string.Empty)
+        public GameObject()
         {
+            components = new List<Component>();
+            aquireComponents(typeof(GameObject));
+            transform = GetComponent<Transform>();
+            isStatic = false;
         }
 
-        public GameObject(string name)
+        public GameObject(GameObject obj)
         {
-            id = newID++;
-            position = new Vector2f();
-            rotation = 0f;
-            scale = new Vector2f(1, 1);
-            this.name = name;
-            children = new List<IScenegraphElement>();
+            components = new List<Component>();
+            foreach (Component c in obj.components)
+            {
+                aquireComponents(c.GetType());
+            }
+            isStatic = false;
+            transform = GetComponent<Transform>();
         }
 
         #endregion Public Constructors
 
-        #region Public Events
-
-        public event EventHandler SetDisabled;
-
-        public event EventHandler SetEnabled;
-
-        #endregion Public Events
-
         #region Public Properties
 
-        public IScenegraphElement[] Children
-        {
-            get
-            {
-                return children.ToArray();
-            }
-        }
+        public bool IsStatic { get { return isStatic; } }
+        public Transform Transform { get { return transform; } }
 
-        public bool Enabled
+        #endregion Public Properties
+
+        #region Private Methods
+
+        private void aquireComponents(Type aquiredType)
         {
-            get { return enabled; }
-            set
+            foreach (Attribute a in aquiredType.GetCustomAttributes(true))
             {
-                if (enabled != value)
+                if (a is RequireComponentAttribute)
                 {
-                    if (value)
-                    {
-                        enabled = true;
-                        OnSetEnabled();
-                    }
-                    else
-                    {
-                        enabled = false;
-                        OnSetDisabled();
-                    }
+                    RequireComponentAttribute attribute = a as RequireComponentAttribute;
+                    if (attribute.RequiredType != null)
+                        this.AddComponent((Component)Activator.CreateInstance((attribute).RequiredType, this));
                 }
             }
         }
 
-        public string Name
+        public override Component AddComponent(Component component)
         {
-            get { return name; }
-            set { name = value; }
-        }
-
-        public IScenegraphElement Parent
-        {
-            get
+            foreach (Attribute a in component.GetType().GetCustomAttributes(true))
             {
-                return this.parent;
+                if (a is SingleInstanceComponentAttribute)
+                {
+                    foreach (Component c in components)
+                    {
+                        if (c is Component)
+                            return c;
+                    }
+                }
             }
 
-            set
+            components.Add(component);
+            component.SetGameObject(this);
+            component.Reset();
+            return component;
+        }
+
+        public void RemoveComponent(Component component)
+        {
+            if (component is Transform)
+                return;
+
+            components.Remove(component);
+        }
+
+        public override void Reset()
+        {
+            foreach (Component c in components)
             {
-                if (parent == value)
-                    return;
-                parent?.RemoveChild(this);
-                parent = value;
-
-                if (parent == null)
-                    parent = scenegraph.Root;
-                parent.AddChild(this);
-            }
-        }
-
-        public Vector2f Position
-        {
-            get { return position; }
-            set { position = value; }
-        }
-
-        public float Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; }
-        }
-
-        public Vector2f Scale
-        {
-            get { return scale; }
-            set { scale = value; }
-        }
-
-        public Scenegraph Scenegraph
-        {
-            get
-            {
-                return scenegraph;
-            }
-
-            set
-            {
-                if (scenegraph == value)
-                    return;
-
-                RemoveFromScenegraph();
-                scenegraph = value;
-                AddToScenegraph(scenegraph);
+                c.Reset();
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Indexers
-
-        public IScenegraphElement this[int index]
+        public override T GetComponent<T>()
         {
-            get
+            foreach (Component c in components)
             {
-                if (index < 0 || children.Count >= index)
-                    return null;
-                return children[index];
+                if (c is T)
+                    return c as T;
             }
-        }
-
-        #endregion Public Indexers
-
-        #region Public Methods
-
-        public void AddChild(IScenegraphElement element)
-        {
-            if (children.Contains(element))
-                children.Add(element);
-        }
-
-        public void AddToScenegraph(Scenegraph scenegraph)
-        {
-            if (this.scenegraph != scenegraph)
-                this.scenegraph = scenegraph;
-
-            this.scenegraph.AddElement(this);
-        }
-
-        public virtual void Draw(float elapsedTime)
-        {
-            for (int i = 0; i < children.Count; i++)
-            {
-                children[i].Draw(elapsedTime);
-            }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is GameObject)
-                return Equals(obj as GameObject);
-            return false;
-        }
-
-        public bool Equals(GameObject other)
-        {
-            return other.id == id;
-        }
-
-        public virtual void FixedUpdate(float elapsedTime)
-        {
-            for (int i = 0; i < children.Count; i++)
-            {
-                children[i].FixedUpdate(elapsedTime);
-            }
-        }
-
-        public IEnumerator<IScenegraphElement> GetEnumerator()
-        {
-            return children.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return children.GetEnumerator();
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode() + (int)id;
-        }
-
-        public XmlSchema GetSchema()
-        {
             return null;
         }
 
-        public virtual void ReadXml(XmlReader reader)
+        public override Component[] GetComponents()
         {
-            Dictionary<string, char> elements = new Dictionary<string, char>();
-            elements.Add("name", 'n');
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "gameobject")
-                    return;
+            return components.ToArray();
+        }
 
-                if (reader.NodeType == XmlNodeType.Element)
-                    if (elements.ContainsKey(reader.Name.ToLower()))
-                        switch (elements[reader.Name.ToLower()])
-                        {
-                            case 'n':
-                                if (reader.IsEmptyElement)
-                                    break;
-                                reader.Read();
-                                name = reader.Value;
-                                break;
-                        }
+        private string tag;
+
+        public string Tag
+        {
+            get { return tag; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value)) throw new InvalidTagException();
+                tag = value;
+                TagManager.RegisterTag(value);
             }
         }
-
-        public void RemoveChild(IScenegraphElement element)
+        
+        public override bool CompareTag(string tag)
         {
-            children.Remove(element);
-        }
-
-        public void RemoveFromScenegraph()
-        {
-            scenegraph?.RemoveElement(this);
-        }
-
-        public override string ToString()
-        {
-            return name;
-        }
-
-        public virtual void Update(float elapsedTime)
-        {
-            for (int i = 0; i < children.Count; i++)
-            {
-                children[i].Update(elapsedTime);
-            }
-        }
-
-        public virtual void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("gameobject");
-            XmlWriteGameObject(writer);
-            writer.WriteEndElement();
-        }
-
-        #endregion Public Methods
-
-        #region Protected Methods
-
-        protected void XmlWriteGameObject(XmlWriter writer)
-        {
-            writer.WriteElementString("name", name);
-            writer.WriteElementString("enabled", enabled ? "1" : "0");
-            position.WriteXml(writer, "position");
-            writer.WriteElementString("rotation", rotation.ToString());
-            scale.WriteXml(writer, "scale");
-        }
-
-        #endregion Protected Methods
-
-        #region Private Methods
-
-        private void OnSetDisabled()
-        {
-            SetDisabled?.Invoke(this, new EventArgs());
-        }
-
-        private void OnSetEnabled()
-        {
-            SetEnabled?.Invoke(this, new EventArgs());
+            return TagManager.CompareTag(this.tag, tag);
         }
 
         #endregion Private Methods

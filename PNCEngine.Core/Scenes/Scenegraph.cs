@@ -167,11 +167,7 @@ namespace PNCEngine.Core.Scenes
             {
                 return children.GetEnumerator();
             }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+            
 
             public void RemoveChild(IScenegraphElement element)
             {

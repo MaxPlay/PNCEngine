@@ -69,8 +69,11 @@
     <Compile Include="Exceptions\SceneFileNotFoundException.cs" />
     <Compile Include="Exceptions\SingletonAlreadyExistsException.cs" />
     <Compile Include="Extensions\ComparableExtension.cs" />
+    <Compile Include="Exceptions\InvalidTagException.cs" />
     <Compile Include="Extensions\VectorExtension.cs" />
+    <Compile Include="MathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Space.cs" />
     <Compile Include="ZipCompressor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

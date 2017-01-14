@@ -2,7 +2,7 @@
 
 namespace PNCEngine.Core.Interfaces
 {
-    public interface IScenegraphElement : IParent<IScenegraphElement>, IDrawable, IUpdateable
+    public interface IScenegraphElement : IDrawable, IUpdateable
     {
         #region Public Properties
 

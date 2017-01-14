@@ -60,15 +60,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\RequireComponentAttribute.cs" />
+    <Compile Include="Attributes\SingleInstanceComponentAttribute.cs" />
+    <Compile Include="Component.cs" />
+    <Compile Include="Components\Transform.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="EngineObject.cs" />
     <Compile Include="EngineWindow.cs" />
     <Compile Include="Events\SettingsEventArgs.cs" />
     <Compile Include="Events\WindowSettingsChangedArgs.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Interfaces\IScenegraphElement.cs" />
-    <Compile Include="Interfaces\ITransform.cs" />
-    <Compile Include="Interfaces\IGameObject.cs" />
-    <Compile Include="Interfaces\IParent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Interfaces\IUpdateable.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Scenes\Scenegraph.cs" />
     <Compile Include="Scenes\SceneManager.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="TagManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PNCEngine.Assets\PNCEngine.Assets.csproj">
@@ -95,9 +98,7 @@
       <Name>PNCEngine.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
