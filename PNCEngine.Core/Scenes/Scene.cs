@@ -59,14 +59,14 @@ namespace PNCEngine.Core.Scenes
 
         #region Public Methods
 
-        public void Draw(float elapsedTime)
+        public void Draw()
         {
-            scenegraph.Draw(elapsedTime);
+            scenegraph.Draw();
         }
 
-        public void FixedUpdate(float elapsedTime)
+        public void FixedUpdate()
         {
-            scenegraph.FixedUpdate(elapsedTime);
+            scenegraph.FixedUpdate();
         }
 
         public void Load()
@@ -115,9 +115,14 @@ namespace PNCEngine.Core.Scenes
             spriteBatch = new SpriteBatch(target);
         }
 
-        public void Update(float elapsedTime)
+        internal void Unload()
         {
-            scenegraph.Update(elapsedTime);
+            scenegraph.Unload();
+        }
+
+        public void Update()
+        {
+            scenegraph.Update();
         }
 
         #endregion Public Methods

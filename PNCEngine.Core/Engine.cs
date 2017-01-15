@@ -75,15 +75,15 @@ namespace PNCEngine.Core
             Debug.Instance.Save();
         }
 
-        public void Draw(Time elapsedTime)
+        public void Draw()
         {
             window.Clear();
-            SceneManager.Draw(elapsedTime.AsSeconds());
+            SceneManager.Draw();
         }
 
         public void FixedUpdate()
         {
-            SceneManager.FixedUpdate(elapsedFixedUpdateTime);
+            SceneManager.FixedUpdate();
         }
 
         public void Run()
@@ -97,7 +97,7 @@ namespace PNCEngine.Core
 
                 window.DispatchEvents();
                 Update(elapsedTime);
-                Draw(elapsedTime);
+                Draw();
                 window.Display();
             }
         }
@@ -108,9 +108,11 @@ namespace PNCEngine.Core
             if (elapsedFixedUpdateTime >= fixedUpdateTime)
             {
                 FixedUpdate();
+                GameTime.ElapsedFixedTime = elapsedFixedUpdateTime;
                 elapsedFixedUpdateTime = 0;
             }
-            SceneManager.Update(elapsedTime.AsSeconds());
+            GameTime.ElapsedTime = elapsedTime.AsSeconds();
+            SceneManager.Update();
         }
 
         #endregion Public Methods

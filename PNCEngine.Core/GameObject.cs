@@ -1,9 +1,12 @@
 ﻿using PNCEngine.Core.Attributes;
 using PNCEngine.Core.Components;
+using PNCEngine.Core.Scenes;
 using PNCEngine.Utils.Exceptions;
 using PNCEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
+using static PNCEngine.Core.Scenes.Scenegraph;
+using PNCEngine.Core.Events;
 
 namespace PNCEngine.Core
 {
@@ -83,11 +86,73 @@ namespace PNCEngine.Core
             return component;
         }
 
+        internal void AddSubscriptions(Transform parent)
+        {
+            if(parent == null)
+            {
+                SceneManager.CurrentScene.Scenegraph.Updated += Update;
+                SceneManager.CurrentScene.Scenegraph.FixedUpdated += FixedUpdate;
+                SceneManager.CurrentScene.Scenegraph.Drawed += Draw;
+                SceneManager.CurrentScene.Scenegraph.Unloaded += Unload;
+            }
+            else
+            {
+                parent.GameObject.Updated += Update;
+                parent.GameObject.FixedUpdated += FixedUpdate;
+                parent.GameObject.Drawed += Draw;
+                parent.GameObject.Unloaded += Unload;
+            }
+        }
+
+        private void Unload()
+        {
+            Unloaded?.Invoke();
+        }
+
+        private void Draw(DrawingEventArgs e)
+        {
+            Drawed?.Invoke(e);
+        }
+
+        private void FixedUpdate()
+        {
+            FixedUpdated?.Invoke();
+        }
+
+        private void Update()
+        {
+            Updated?.Invoke();
+        }
+
+        internal void RemoveSubscriptions(Transform parent)
+        {
+            if (parent == null)
+            {
+                SceneManager.CurrentScene.Scenegraph.Updated -= Update;
+                SceneManager.CurrentScene.Scenegraph.FixedUpdated -= FixedUpdate;
+                SceneManager.CurrentScene.Scenegraph.Drawed -= Draw;
+                SceneManager.CurrentScene.Scenegraph.Unloaded -= Unload;
+            }
+            else
+            {
+                parent.GameObject.Updated -= Update;
+                parent.GameObject.FixedUpdated -= FixedUpdate;
+                parent.GameObject.Drawed -= Draw;
+                parent.GameObject.Unloaded -= Unload;
+            }
+        }
+
+        public event UpdateEventHandler Updated;
+        public event UpdateEventHandler FixedUpdated;
+        public event DrawingEventHandler Drawed;
+        public event ScenegraphEventHandler Unloaded;
+
         public void RemoveComponent(Component component)
         {
             if (component is Transform)
                 return;
 
+            component.OnDestroyed();
             components.Remove(component);
         }
 
@@ -131,7 +196,7 @@ namespace PNCEngine.Core
         {
             return TagManager.CompareTag(this.tag, tag);
         }
-
+        
         #endregion Private Methods
     }
 }

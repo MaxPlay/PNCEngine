@@ -12,9 +12,10 @@
 
         #region Public Constructors
 
-        public Component()
-                           : base()
+        public Component() : base()
         {
+            Reset();
+            Initialize();
         }
 
         #endregion Public Constructors
@@ -73,7 +74,7 @@
 
         #region Internal Methods
 
-        internal void SetGameObject(GameObject gameObject)
+        internal virtual void SetGameObject(GameObject gameObject)
         {
             this.gameObject = gameObject;
         }

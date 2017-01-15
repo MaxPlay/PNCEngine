@@ -126,6 +126,7 @@ namespace PNCEngine.Assets
                 defaultTexture.Load();
                 defaultAudio.Load();
                 defaultFont.Load();
+                Debug.Log("Default resources loaded.");
             }
             catch (FileNotFoundException e)
             {

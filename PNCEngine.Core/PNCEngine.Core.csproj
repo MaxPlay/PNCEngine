@@ -63,10 +63,14 @@
     <Compile Include="Attributes\RequireComponentAttribute.cs" />
     <Compile Include="Attributes\SingleInstanceComponentAttribute.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="Components\Rendering\Renderer.cs" />
+    <Compile Include="Components\Rendering\Sprite.cs" />
+    <Compile Include="Components\Rendering\SpriteRenderer.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="EngineObject.cs" />
     <Compile Include="EngineWindow.cs" />
+    <Compile Include="Events\DrawingEventArgs.cs" />
     <Compile Include="Events\SettingsEventArgs.cs" />
     <Compile Include="Events\WindowSettingsChangedArgs.cs" />
     <Compile Include="GameObject.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="Scenes\SceneManager.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TagManager.cs" />
+    <Compile Include="GameTime.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PNCEngine.Assets\PNCEngine.Assets.csproj">

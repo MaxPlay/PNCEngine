@@ -1,14 +1,16 @@
 ﻿using PNCEngine.Core.Attributes;
+using PNCEngine.Core.Interfaces;
 using PNCEngine.Utils;
 using SFML.System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PNCEngine.Core.Scenes;
 
 namespace PNCEngine.Core.Components
 {
     [SingleInstanceComponent]
-    public class Transform : Component, IEnumerable
+    public class Transform : Component, IEnumerable, IScenegraphElement
     {
         #region Protected Fields
 
@@ -18,6 +20,7 @@ namespace PNCEngine.Core.Components
         protected Vector2f position;
         protected float rotation;
         protected Vector2f scale;
+        private Scenegraph scenegraph;
 
         #endregion Protected Fields
 
@@ -26,6 +29,7 @@ namespace PNCEngine.Core.Components
         public Transform() : base()
         {
             Reset();
+            scenegraph = SceneManager.CurrentScene.Scenegraph;
         }
 
         #endregion Public Constructors
@@ -70,9 +74,11 @@ namespace PNCEngine.Core.Components
                 if (parent == value)
                     return;
 
+                GameObject.RemoveSubscriptions(parent);
                 parent?.children.Remove(this);
                 parent = value;
                 parent?.children.Add(this);
+                GameObject.AddSubscriptions(parent);
             }
         }
 
@@ -131,6 +137,14 @@ namespace PNCEngine.Core.Components
             get
             {
                 return new InnerEnumerator(this);
+            }
+        }
+
+        public Scenegraph Scenegraph
+        {
+            get
+            {
+                return scenegraph;
             }
         }
 

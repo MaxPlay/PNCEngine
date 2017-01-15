@@ -64,10 +64,8 @@ namespace PNCEngine.Core
         public static void Destroy(EngineObject obj)
         {
             if (obj is GameObject)
-            {
-                ((GameObject)obj).Reset();
-            }
-
+                ((GameObject)obj).OnDestroyed();
+            
             if (obj is Component)
                 ((Component)obj).GameObject.RemoveComponent((Component)obj);
 
@@ -75,6 +73,13 @@ namespace PNCEngine.Core
             GC.Collect();
         }
 
+        public event EngineObjectEventHandler Destroyed;
+
+        internal void OnDestroyed()
+        {
+            Destroyed?.Invoke(this, new EventArgs());
+        }
+        
         public static GameObject Instantiate(GameObject obj, Vector2f position, float rotation)
         {
             GameObject newObj = new GameObject(obj);
@@ -87,7 +92,7 @@ namespace PNCEngine.Core
 
         public Component AddComponent<T>() where T : Component, new()
         {
-            return this.AddComponent(new T());
+            return AddComponent(new T());
         }
 
         public abstract bool CompareTag(string tag);

@@ -2,24 +2,12 @@
 
 namespace PNCEngine.Core.Interfaces
 {
-    public interface IScenegraphElement : IDrawable, IUpdateable
+    public interface IScenegraphElement
     {
         #region Public Properties
 
-        Scenegraph Scenegraph { get; set; }
+        Scenegraph Scenegraph { get; }
 
         #endregion Public Properties
-
-        #region Public Methods
-
-        void AddChild(IScenegraphElement element);
-
-        void AddToScenegraph(Scenegraph scenegraph);
-
-        void RemoveChild(IScenegraphElement element);
-
-        void RemoveFromScenegraph();
-
-        #endregion Public Methods
     }
 }
