@@ -1,11 +1,11 @@
 ﻿using PNCEngine.Core.Attributes;
 using PNCEngine.Core.Interfaces;
+using PNCEngine.Core.Scenes;
 using PNCEngine.Utils;
 using SFML.System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PNCEngine.Core.Scenes;
 
 namespace PNCEngine.Core.Components
 {
@@ -20,15 +20,19 @@ namespace PNCEngine.Core.Components
         protected Vector2f position;
         protected float rotation;
         protected Vector2f scale;
-        private Scenegraph scenegraph;
 
         #endregion Protected Fields
 
+        #region Private Fields
+
+        private Scenegraph scenegraph;
+
+        #endregion Private Fields
+
         #region Public Constructors
 
-        public Transform() : base()
+        public Transform(GameObject gameObject) : base(gameObject)
         {
-            Reset();
             scenegraph = SceneManager.CurrentScene.Scenegraph;
         }
 
@@ -38,6 +42,15 @@ namespace PNCEngine.Core.Components
 
         public int ChildCount { get { return children.Count; } }
         public Vector2f Down { get { return new Vector2f(sineOfRotation, -cosineOfRotation); } }
+
+        public IEnumerator Enumerator
+        {
+            get
+            {
+                return new InnerEnumerator(this);
+            }
+        }
+
         public Vector2f Left { get { return new Vector2f(-cosineOfRotation, -sineOfRotation); } }
         public Vector2f LocalPosition { get { return this.position; } set { this.position = value; } }
 
@@ -121,6 +134,14 @@ namespace PNCEngine.Core.Components
             }
         }
 
+        public Scenegraph Scenegraph
+        {
+            get
+            {
+                return scenegraph;
+            }
+        }
+
         public Vector2f Up { get { return new Vector2f(-sineOfRotation, cosineOfRotation); } }
 
         #endregion Public Properties
@@ -132,20 +153,9 @@ namespace PNCEngine.Core.Components
             return children[index];
         }
 
-        public IEnumerator Enumerator
+        public IEnumerator GetEnumerator()
         {
-            get
-            {
-                return new InnerEnumerator(this);
-            }
-        }
-
-        public Scenegraph Scenegraph
-        {
-            get
-            {
-                return scenegraph;
-            }
+            return new InnerEnumerator(this);
         }
 
         public override void Reset()
@@ -206,11 +216,6 @@ namespace PNCEngine.Core.Components
         public void Translate(float x, float y, Space relativeSpace = Space.World)
         {
             Translate(new Vector2f(x, y), relativeSpace);
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return new InnerEnumerator(this);
         }
 
         #endregion Public Methods

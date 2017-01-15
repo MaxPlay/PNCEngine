@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PNCEngine.Core.Events;
+﻿using PNCEngine.Core.Events;
 
 namespace PNCEngine.Core.Components.Rendering
 {
     public abstract class Renderer : Component
     {
+        #region Public Constructors
+
+        public Renderer(GameObject gameObject) : base(gameObject)
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
+
         internal override void SetGameObject(GameObject gameObject)
         {
             if (GameObject == gameObject)
@@ -21,6 +26,12 @@ namespace PNCEngine.Core.Components.Rendering
                 GameObject.Drawed += Draw;
         }
 
+        #endregion Internal Methods
+
+        #region Protected Methods
+
         protected abstract void Draw(DrawingEventArgs e);
+
+        #endregion Protected Methods
     }
 }

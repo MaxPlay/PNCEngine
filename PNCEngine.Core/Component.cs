@@ -12,8 +12,11 @@
 
         #region Public Constructors
 
-        public Component() : base()
+        private Component() { }
+
+        public Component(GameObject gameObject) : base()
         {
+            SetGameObject(gameObject);
             Reset();
             Initialize();
         }
@@ -76,6 +79,8 @@
 
         internal virtual void SetGameObject(GameObject gameObject)
         {
+            if (gameObject == null)
+                return;
             this.gameObject = gameObject;
         }
 
