@@ -1,4 +1,5 @@
 ﻿using PNCEngine.Assets;
+using PNCEngine.Core.Parser;
 using PNCEngine.Rendering;
 using PNCEngine.Utils;
 using PNCEngine.Utils.Exceptions;
@@ -115,17 +116,21 @@ namespace PNCEngine.Core.Scenes
             spriteBatch = new SpriteBatch(target);
         }
 
-        internal void Unload()
-        {
-            scenegraph.Unload();
-        }
-
         public void Update()
         {
             scenegraph.Update();
         }
 
         #endregion Public Methods
+
+        #region Internal Methods
+
+        internal void Unload()
+        {
+            scenegraph.Unload();
+        }
+
+        #endregion Internal Methods
 
         #region Private Methods
 
@@ -157,6 +162,8 @@ namespace PNCEngine.Core.Scenes
 
         private void LoadEntities(XmlReader reader)
         {
+            ComponentIndexer indexer = new ComponentIndexer();
+
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "entities")

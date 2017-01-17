@@ -19,6 +19,19 @@ namespace PNCEngine.Core.Scenes
 
         #region Public Properties
 
+        public static Scene CurrentScene
+        {
+            get
+            {
+                return currentScene;
+            }
+            set
+            {
+                currentScene.Unload();
+                currentScene = value;
+            }
+        }
+
         public static EngineWindow TargetWindow
         {
             get { return targetWindow; }
@@ -93,18 +106,6 @@ namespace PNCEngine.Core.Scenes
             currentScene = LoadScene(startup);
         }
 
-        public static Scene CurrentScene
-        {
-            get
-            {
-                return currentScene;
-            }
-            set
-            {
-                currentScene.Unload();
-                currentScene = value;
-            }
-        }
         #endregion Private Methods
     }
 }

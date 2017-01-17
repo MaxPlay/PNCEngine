@@ -75,6 +75,7 @@
     <Compile Include="Events\WindowSettingsChangedArgs.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Interfaces\IScenegraphElement.cs" />
+    <Compile Include="Parser\ComponentIndexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Interfaces\IUpdateable.cs" />

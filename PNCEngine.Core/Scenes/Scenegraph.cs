@@ -1,9 +1,6 @@
-﻿using PNCEngine.Core.Interfaces;
+﻿using PNCEngine.Core.Events;
+using PNCEngine.Core.Interfaces;
 using PNCEngine.Rendering;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using PNCEngine.Core.Events;
 
 namespace PNCEngine.Core.Scenes
 {
@@ -24,6 +21,28 @@ namespace PNCEngine.Core.Scenes
 
         #endregion Public Constructors
 
+        #region Public Delegates
+
+        public delegate void DrawingEventHandler(DrawingEventArgs e);
+
+        public delegate void ScenegraphEventHandler();
+
+        public delegate void UpdateEventHandler();
+
+        #endregion Public Delegates
+
+        #region Public Events
+
+        public event DrawingEventHandler Drawed;
+
+        public event UpdateEventHandler FixedUpdated;
+
+        public event ScenegraphEventHandler Unloaded;
+
+        public event UpdateEventHandler Updated;
+
+        #endregion Public Events
+
         #region Public Properties
 
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
@@ -31,15 +50,6 @@ namespace PNCEngine.Core.Scenes
         #endregion Public Properties
 
         #region Public Methods
-
-        public event DrawingEventHandler Drawed;
-        public event UpdateEventHandler Updated;
-        public event UpdateEventHandler FixedUpdated;
-        public event ScenegraphEventHandler Unloaded;
-
-        public delegate void DrawingEventHandler(DrawingEventArgs e);
-        public delegate void UpdateEventHandler();
-        public delegate void ScenegraphEventHandler();
 
         public void Draw()
         {
@@ -53,20 +63,16 @@ namespace PNCEngine.Core.Scenes
             FixedUpdated();
         }
 
+        public void Unload()
+        {
+            Unloaded();
+        }
+
         public void Update()
         {
             Updated();
         }
 
         #endregion Public Methods
-
-        #region Private Classes
-
-        public void Unload()
-        {
-            Unloaded();
-        }
-
-        #endregion Private Classes
     }
 }
