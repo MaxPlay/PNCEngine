@@ -45,7 +45,7 @@ namespace PNCEngine.Core.Scenes
 
         #region Public Properties
 
-        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
+        public SpriteBatch SpriteBatch { get { return spriteBatch; } set { spriteBatch = value; } }
 
         #endregion Public Properties
 
@@ -53,24 +53,22 @@ namespace PNCEngine.Core.Scenes
 
         public void Draw()
         {
-            spriteBatch.Begin();
-            Drawed(new DrawingEventArgs(spriteBatch));
-            spriteBatch.End();
+            Drawed?.Invoke(new DrawingEventArgs(spriteBatch));
         }
 
         public void FixedUpdate()
         {
-            FixedUpdated();
+            FixedUpdated?.Invoke();
         }
 
         public void Unload()
         {
-            Unloaded();
+            Unloaded?.Invoke();
         }
 
         public void Update()
         {
-            Updated();
+            Updated?.Invoke();
         }
 
         #endregion Public Methods

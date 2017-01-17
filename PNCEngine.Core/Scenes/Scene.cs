@@ -12,6 +12,12 @@ namespace PNCEngine.Core.Scenes
 {
     public class Scene
     {
+        #region Public Fields
+
+        public const string extension = ".scene";
+
+        #endregion Public Fields
+
         #region Private Fields
 
         private string filename;
@@ -62,7 +68,9 @@ namespace PNCEngine.Core.Scenes
 
         public void Draw()
         {
+            spriteBatch.Begin();
             scenegraph.Draw();
+            spriteBatch.End();
         }
 
         public void FixedUpdate()
@@ -114,6 +122,7 @@ namespace PNCEngine.Core.Scenes
             spriteBatch = null;
             GC.Collect();
             spriteBatch = new SpriteBatch(target);
+            scenegraph.SpriteBatch = spriteBatch;
         }
 
         public void Update()

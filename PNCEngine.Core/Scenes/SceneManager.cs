@@ -57,6 +57,8 @@ namespace PNCEngine.Core.Scenes
             scenes = new Dictionary<string, string>();
             Load();
             Debug.Log("Scenes loaded.");
+
+            currentScene = LoadScene(startup);
         }
 
         public static Scene LoadScene(string name)
@@ -102,8 +104,6 @@ namespace PNCEngine.Core.Scenes
                     }
                 }
             }
-
-            currentScene = LoadScene(startup);
         }
 
         #endregion Private Methods
