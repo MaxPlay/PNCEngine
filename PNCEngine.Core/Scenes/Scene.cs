@@ -5,6 +5,7 @@ using PNCEngine.Utils;
 using PNCEngine.Utils.Exceptions;
 using SFML.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -26,6 +27,7 @@ namespace PNCEngine.Core.Scenes
         private string name;
         private Scenegraph scenegraph;
         private SpriteBatch spriteBatch;
+        private List<GameObject> gameObjects;
 
         #endregion Private Fields
 
@@ -34,6 +36,7 @@ namespace PNCEngine.Core.Scenes
         public Scene()
         {
             scenegraph = new Scenegraph(spriteBatch);
+            gameObjects = new List<GameObject>();
         }
 
         public Scene(string name, string filename) : this()
@@ -184,6 +187,7 @@ namespace PNCEngine.Core.Scenes
                     {
                         GameObject g = new GameObject();
                         g.Load(reader, null, componentIndexer, scenegraph);
+                        gameObjects.Add(g);
                     }
                 }
             }

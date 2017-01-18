@@ -33,9 +33,11 @@ namespace PNCEngine.Core
             new Debug();
             Debug.Log("Engine initialized.");
             new Settings();
+            window = new EngineWindow("PNCEngine");
             try
             {
                 AssetManager.Initialize();
+                SceneManager.TargetWindow = window;
                 SceneManager.Initialize();
             }
             catch (Exception e)
@@ -45,7 +47,6 @@ namespace PNCEngine.Core
             }
             clock = new Clock();
             fixedUpdateTime = 0.2f;
-            window = new EngineWindow("PNCEngine");
             window.SettingsChanged += Window_SettingsChanged;
         }
 

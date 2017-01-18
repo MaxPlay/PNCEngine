@@ -2,6 +2,7 @@
 using PNCEngine.Core.Components;
 using PNCEngine.Core.Events;
 using PNCEngine.Core.Parser;
+using PNCEngine.Core.Parser.Exceptions;
 using PNCEngine.Core.Scenes;
 using PNCEngine.Utils.Exceptions;
 using System;
@@ -144,10 +145,13 @@ namespace PNCEngine.Core
         {
             if (parent == null)
             {
-                SceneManager.CurrentScene.Scenegraph.Updated += Update;
-                SceneManager.CurrentScene.Scenegraph.FixedUpdated += FixedUpdate;
-                SceneManager.CurrentScene.Scenegraph.Drawed += Draw;
-                SceneManager.CurrentScene.Scenegraph.Unloaded += Unload;
+                if (transform.Scenegraph == null)
+                    return;
+
+                transform.Scenegraph.Updated += Update;
+                transform.Scenegraph.FixedUpdated += FixedUpdate;
+                transform.Scenegraph.Drawed += Draw;
+                transform.Scenegraph.Unloaded += Unload;
             }
             else
             {
@@ -161,6 +165,7 @@ namespace PNCEngine.Core
         internal void Load(XmlReader reader, GameObject parent, ComponentIndexer componentIndexer, Scenegraph scenegraph)
         {
             transform.Scenegraph = scenegraph;
+            AddSubscriptions(null);
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "GameObject")
@@ -173,12 +178,15 @@ namespace PNCEngine.Core
                     }
                     else
                     {
-                        Component c = componentIndexer.GetComponentByName(reader.Name);
+                        Component c = componentIndexer.GetComponentByName(reader.Name, this);
+                        if (c == null)
+                            throw new ParseException(reader.Name);
+
                         if (c is Transform)
                         {
-                            components[0].Load(reader);
+                            transform.Load(reader);
                             if (parent != null)
-                                ((Transform)components[0]).Parent = parent.transform;
+                                transform.Parent = parent.transform;
                         }
                         else
                         {
@@ -193,6 +201,9 @@ namespace PNCEngine.Core
         {
             if (parent == null)
             {
+                if (SceneManager.CurrentScene == null)
+                    return;
+
                 SceneManager.CurrentScene.Scenegraph.Updated -= Update;
                 SceneManager.CurrentScene.Scenegraph.FixedUpdated -= FixedUpdate;
                 SceneManager.CurrentScene.Scenegraph.Drawed -= Draw;
@@ -218,8 +229,14 @@ namespace PNCEngine.Core
                 if (a is RequireComponentAttribute)
                 {
                     RequireComponentAttribute attribute = a as RequireComponentAttribute;
+                    for (int i = 0; i < components.Count; i++)
+                        if (components[i].GetType() == attribute.RequiredType)
+                            return;
+
                     if (attribute.RequiredType != null)
-                        this.AddComponent((Component)Activator.CreateInstance((attribute).RequiredType, this));
+                    {
+                        AddComponent((Component)Activator.CreateInstance(attribute.RequiredType, this));
+                    }
                 }
             }
         }
@@ -238,7 +255,7 @@ namespace PNCEngine.Core
         {
             while (reader.Read())
             {
-                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Component")
+                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Children")
                     return;
 
                 if (reader.NodeType == XmlNodeType.Element)

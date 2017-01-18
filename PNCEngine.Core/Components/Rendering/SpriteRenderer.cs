@@ -21,6 +21,7 @@ namespace PNCEngine.Core.Components.Rendering
 
         public SpriteRenderer(GameObject gameObject) : base(gameObject)
         {
+            gameObject.Drawed += Draw;
         }
 
         #endregion Public Constructors

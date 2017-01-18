@@ -34,7 +34,8 @@ namespace PNCEngine.Core.Components
 
         public Transform(GameObject gameObject) : base(gameObject)
         {
-            scenegraph = SceneManager.CurrentScene.Scenegraph;
+            scenegraph = SceneManager.CurrentScene?.Scenegraph;
+            children = new List<Transform>();
         }
 
         #endregion Public Constructors

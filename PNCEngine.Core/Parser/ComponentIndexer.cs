@@ -17,19 +17,19 @@ namespace PNCEngine.Core.Parser
 
         public ComponentIndexer()
         {
-            types = (from t in Assembly.GetExecutingAssembly().GetTypes() where t.IsClass && t.BaseType == typeof(Component) && !t.IsAbstract select t).ToDictionary(f => f.Name.ToLower());
+            types = (from t in Assembly.GetExecutingAssembly().GetTypes() where t.IsClass && typeof(Component).IsAssignableFrom(t) && !t.IsAbstract select t).ToDictionary(f => f.Name.ToLower());
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public Component GetComponentByName(string name)
+        public Component GetComponentByName(string name, GameObject gameObject)
         {
             string lowerName = name.ToLower();
 
             if (types.ContainsKey(lowerName))
-                return Activator.CreateInstance(types[lowerName]) as Component;
+                return Activator.CreateInstance(types[lowerName], gameObject) as Component;
 
             return null;
         }
