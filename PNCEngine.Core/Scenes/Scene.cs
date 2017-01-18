@@ -148,13 +148,10 @@ namespace PNCEngine.Core.Scenes
 
         private void LoadAudio(XmlReader reader)
         {
-            if (reader.AttributeCount > 0)
-            {
-                int count = 0;
-                if (!int.TryParse(reader.GetAttribute("count"), out count))
-                    return;
-                this.loadedAudio = new int[count];
-            }
+            int count;
+            if (!int.TryParse(reader.GetAttribute("count"), out count))
+                return;
+            loadedAudio = new int[count];
 
             while (reader.Read())
             {
@@ -195,13 +192,10 @@ namespace PNCEngine.Core.Scenes
 
         private void LoadTextures(XmlReader reader)
         {
-            if (reader.AttributeCount > 0)
-            {
-                int count = 0;
-                if (!int.TryParse(reader.GetAttribute("count"), out count))
-                    return;
-                this.loadedTextures = new int[count];
-            }
+            int count;
+            if (!int.TryParse(reader.GetAttribute("count"), out count))
+                return;
+            loadedTextures = new int[count];
 
             while (reader.Read())
             {

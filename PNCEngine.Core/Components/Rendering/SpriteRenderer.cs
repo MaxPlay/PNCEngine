@@ -73,7 +73,7 @@ namespace PNCEngine.Core.Components.Rendering
             Vector2f scale = transform.LossyScale;
             scale.X *= flipX ? -1 : 1;
             scale.Y *= flipY ? -1 : 1;
-            e.SpriteBatch.Draw(AssetManager.GetTexture(sprite.Texture), transform.Position, sprite.Color, transform.Rotation, scale, sprite.GetOrigin());
+            e.SpriteBatch.Draw(asset, transform.Position, sprite.Color, transform.Rotation, scale, sprite.GetOrigin());
         }
 
         #endregion Protected Methods
