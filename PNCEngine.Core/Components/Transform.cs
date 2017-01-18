@@ -6,6 +6,7 @@ using SFML.System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace PNCEngine.Core.Components
 {
@@ -140,6 +141,11 @@ namespace PNCEngine.Core.Components
             {
                 return scenegraph;
             }
+            set
+            {
+                if (value != null)
+                    scenegraph = value;
+            }
         }
 
         public Vector2f Up { get { return new Vector2f(-sineOfRotation, cosineOfRotation); } }
@@ -219,6 +225,26 @@ namespace PNCEngine.Core.Components
         }
 
         #endregion Public Methods
+
+        #region Internal Methods
+
+        internal override void Load(XmlReader reader)
+        {
+            float positionX, positionY, rotation, scaleX, scaleY;
+            float.TryParse(reader.GetAttribute("Position.X"), out positionX);
+            float.TryParse(reader.GetAttribute("Position.Y"), out positionY);
+            if (!float.TryParse(reader.GetAttribute("Scale.X"), out scaleX))
+                scaleX = 1;
+            if (!float.TryParse(reader.GetAttribute("Scale.Y"), out scaleY))
+                scaleY = 1;
+            float.TryParse(reader.GetAttribute("Rotation"), out rotation);
+
+            Rotation = rotation;
+            Position = new Vector2f(positionX, positionY);
+            scale = new Vector2f(scaleX, scaleY);
+        }
+
+        #endregion Internal Methods
 
         #region Private Classes
 

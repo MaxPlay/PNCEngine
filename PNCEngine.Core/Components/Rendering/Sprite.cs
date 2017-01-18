@@ -3,6 +3,8 @@ using PNCEngine.Rendering;
 using PNCEngine.Utils;
 using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Xml;
 
 namespace PNCEngine.Core.Components.Rendering
 {
@@ -68,6 +70,18 @@ namespace PNCEngine.Core.Components.Rendering
         }
 
         #endregion Public Methods
+
+        #region Internal Methods
+
+        internal override void Load(XmlReader reader)
+        {
+            Enum.TryParse(reader.GetAttribute("Origin"), out origin);
+            color = PNCEngine.Rendering.Extensions.ColorExtension.FromHex(reader.GetAttribute("Color"), Color.White);
+            texture = AssetManager.AquireTexture(reader.GetAttribute("Texture"));
+            UpdateOrigin();
+        }
+
+        #endregion Internal Methods
 
         #region Private Methods
 

@@ -36,6 +36,8 @@ namespace PNCEngine.Core
 
         public event EngineObjectEventHandler Deactivated;
 
+        public event EngineObjectEventHandler Destroyed;
+
         #endregion Public Events
 
         #region Public Properties
@@ -65,7 +67,7 @@ namespace PNCEngine.Core
         {
             if (obj is GameObject)
                 ((GameObject)obj).OnDestroyed();
-            
+
             if (obj is Component)
                 ((Component)obj).GameObject.RemoveComponent((Component)obj);
 
@@ -73,13 +75,6 @@ namespace PNCEngine.Core
             GC.Collect();
         }
 
-        public event EngineObjectEventHandler Destroyed;
-
-        internal void OnDestroyed()
-        {
-            Destroyed?.Invoke(this, new EventArgs());
-        }
-        
         public static GameObject Instantiate(GameObject obj, Vector2f position, float rotation)
         {
             GameObject newObj = new GameObject(obj);
@@ -109,6 +104,15 @@ namespace PNCEngine.Core
         public abstract void Reset();
 
         #endregion Public Methods
+
+        #region Internal Methods
+
+        internal void OnDestroyed()
+        {
+            Destroyed?.Invoke(this, new EventArgs());
+        }
+
+        #endregion Internal Methods
 
         #region Protected Methods
 

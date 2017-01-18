@@ -171,12 +171,21 @@ namespace PNCEngine.Core.Scenes
 
         private void LoadEntities(XmlReader reader)
         {
-            ComponentIndexer indexer = new ComponentIndexer();
+            ComponentIndexer componentIndexer = new ComponentIndexer();
 
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "entities")
                     return;
+
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (reader.Name == "GameObject")
+                    {
+                        GameObject g = new GameObject();
+                        g.Load(reader, null, componentIndexer, scenegraph);
+                    }
+                }
             }
         }
 

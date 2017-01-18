@@ -1,5 +1,7 @@
 ﻿using PNCEngine.Assets;
 using PNCEngine.Core.Events;
+using SFML.System;
+using System.Xml;
 
 namespace PNCEngine.Core.Components.Rendering
 {
@@ -7,6 +9,8 @@ namespace PNCEngine.Core.Components.Rendering
     {
         #region Private Fields
 
+        private bool flipX;
+        private bool flipY;
         private Sprite sprite;
 
         private Transform transform;
@@ -21,6 +25,22 @@ namespace PNCEngine.Core.Components.Rendering
 
         #endregion Public Constructors
 
+        #region Public Properties
+
+        public bool FlipX
+        {
+            get { return flipX; }
+            set { flipX = value; }
+        }
+
+        public bool FlipY
+        {
+            get { return flipY; }
+            set { flipY = value; }
+        }
+
+        #endregion Public Properties
+
         #region Public Methods
 
         public override void Reset()
@@ -30,6 +50,16 @@ namespace PNCEngine.Core.Components.Rendering
 
         #endregion Public Methods
 
+        #region Internal Methods
+
+        internal override void Load(XmlReader reader)
+        {
+            bool.TryParse(reader.GetAttribute("FlipX"), out flipX);
+            bool.TryParse(reader.GetAttribute("FlipY"), out flipY);
+        }
+
+        #endregion Internal Methods
+
         #region Protected Methods
 
         protected override void Draw(DrawingEventArgs e)
@@ -38,7 +68,11 @@ namespace PNCEngine.Core.Components.Rendering
                 sprite = GetComponent<Sprite>();
 
             TextureAsset asset = AssetManager.GetTexture(sprite.Texture);
-            e.SpriteBatch.Draw(AssetManager.GetTexture(sprite.Texture), transform.Position, sprite.Color, transform.Rotation, transform.LossyScale, sprite.GetOrigin());
+
+            Vector2f scale = transform.LossyScale;
+            scale.X *= flipX ? -1 : 1;
+            scale.Y *= flipY ? -1 : 1;
+            e.SpriteBatch.Draw(AssetManager.GetTexture(sprite.Texture), transform.Position, sprite.Color, transform.Rotation, scale, sprite.GetOrigin());
         }
 
         #endregion Protected Methods
