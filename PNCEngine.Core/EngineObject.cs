@@ -36,8 +36,6 @@ namespace PNCEngine.Core
 
         public event EngineObjectEventHandler Deactivated;
 
-        public event EngineObjectEventHandler Destroyed;
-
         #endregion Public Events
 
         #region Public Properties
@@ -66,7 +64,9 @@ namespace PNCEngine.Core
         public static void Destroy(EngineObject obj)
         {
             if (obj is GameObject)
-                ((GameObject)obj).OnDestroyed();
+            {
+                ((GameObject)obj).Reset();
+            }
 
             if (obj is Component)
                 ((Component)obj).GameObject.RemoveComponent((Component)obj);
@@ -87,7 +87,7 @@ namespace PNCEngine.Core
 
         public Component AddComponent<T>() where T : Component, new()
         {
-            return AddComponent(new T());
+            return this.AddComponent(new T());
         }
 
         public abstract bool CompareTag(string tag);
@@ -104,15 +104,6 @@ namespace PNCEngine.Core
         public abstract void Reset();
 
         #endregion Public Methods
-
-        #region Internal Methods
-
-        internal void OnDestroyed()
-        {
-            Destroyed?.Invoke(this, new EventArgs());
-        }
-
-        #endregion Internal Methods
 
         #region Protected Methods
 

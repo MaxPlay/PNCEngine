@@ -1,6 +1,6 @@
 ﻿namespace PNCEngine.Rendering
 {
-    public enum Origin
+    public enum TextOrigin
     {
         TopLeft,
         TopCenter,

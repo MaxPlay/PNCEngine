@@ -1,14 +1,9 @@
 ﻿using PNCEngine.Core.Attributes;
 using PNCEngine.Core.Components;
-using PNCEngine.Core.Events;
-using PNCEngine.Core.Parser;
-using PNCEngine.Core.Parser.Exceptions;
-using PNCEngine.Core.Scenes;
 using PNCEngine.Utils.Exceptions;
+using PNCEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Xml;
-using static PNCEngine.Core.Scenes.Scenegraph;
 
 namespace PNCEngine.Core
 {
@@ -19,7 +14,6 @@ namespace PNCEngine.Core
 
         private List<Component> components;
         private bool isStatic;
-        private string tag;
         private Transform transform;
 
         #endregion Private Fields
@@ -47,38 +41,27 @@ namespace PNCEngine.Core
 
         #endregion Public Constructors
 
-        #region Public Events
-
-        public event DrawingEventHandler Drawed;
-
-        public event UpdateEventHandler FixedUpdated;
-
-        public event ScenegraphEventHandler Unloaded;
-
-        public event UpdateEventHandler Updated;
-
-        #endregion Public Events
-
         #region Public Properties
 
         public bool IsStatic { get { return isStatic; } }
-
-        public string Tag
-        {
-            get { return tag; }
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value)) throw new InvalidTagException();
-                tag = value;
-                TagManager.RegisterTag(value);
-            }
-        }
-
         public Transform Transform { get { return transform; } }
 
         #endregion Public Properties
 
-        #region Public Methods
+        #region Private Methods
+
+        private void aquireComponents(Type aquiredType)
+        {
+            foreach (Attribute a in aquiredType.GetCustomAttributes(true))
+            {
+                if (a is RequireComponentAttribute)
+                {
+                    RequireComponentAttribute attribute = a as RequireComponentAttribute;
+                    if (attribute.RequiredType != null)
+                        this.AddComponent((Component)Activator.CreateInstance((attribute).RequiredType, this));
+                }
+            }
+        }
 
         public override Component AddComponent(Component component)
         {
@@ -100,9 +83,20 @@ namespace PNCEngine.Core
             return component;
         }
 
-        public override bool CompareTag(string tag)
+        public void RemoveComponent(Component component)
         {
-            return TagManager.CompareTag(this.tag, tag);
+            if (component is Transform)
+                return;
+
+            components.Remove(component);
+        }
+
+        public override void Reset()
+        {
+            foreach (Component c in components)
+            {
+                c.Reset();
+            }
         }
 
         public override T GetComponent<T>()
@@ -120,161 +114,22 @@ namespace PNCEngine.Core
             return components.ToArray();
         }
 
-        public void RemoveComponent(Component component)
-        {
-            if (component is Transform)
-                return;
+        private string tag;
 
-            component.OnDestroyed();
-            components.Remove(component);
-        }
-
-        public override void Reset()
+        public string Tag
         {
-            foreach (Component c in components)
+            get { return tag; }
+            set
             {
-                c.Reset();
+                if (string.IsNullOrWhiteSpace(value)) throw new InvalidTagException();
+                tag = value;
+                TagManager.RegisterTag(value);
             }
         }
-
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal void AddSubscriptions(Transform parent)
+        
+        public override bool CompareTag(string tag)
         {
-            if (parent == null)
-            {
-                if (transform.Scenegraph == null)
-                    return;
-
-                transform.Scenegraph.Updated += Update;
-                transform.Scenegraph.FixedUpdated += FixedUpdate;
-                transform.Scenegraph.Drawed += Draw;
-                transform.Scenegraph.Unloaded += Unload;
-            }
-            else
-            {
-                parent.GameObject.Updated += Update;
-                parent.GameObject.FixedUpdated += FixedUpdate;
-                parent.GameObject.Drawed += Draw;
-                parent.GameObject.Unloaded += Unload;
-            }
-        }
-
-        internal void Load(XmlReader reader, GameObject parent, ComponentIndexer componentIndexer, Scenegraph scenegraph)
-        {
-            transform.Scenegraph = scenegraph;
-            AddSubscriptions(null);
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "GameObject")
-                    return;
-
-                if (reader.NodeType == XmlNodeType.Element)
-                    if (reader.Name == "Children")
-                    {
-                        LoadChildren(reader, componentIndexer);
-                    }
-                    else
-                    {
-                        Component c = componentIndexer.GetComponentByName(reader.Name, this);
-                        if (c == null)
-                            throw new ParseException(reader.Name);
-
-                        if (c is Transform)
-                        {
-                            transform.Load(reader);
-                            if (parent != null)
-                                transform.Parent = parent.transform;
-                        }
-                        else
-                        {
-                            c.Load(reader);
-                            components.Add(c);
-                        }
-                    }
-            }
-        }
-
-        internal void RemoveSubscriptions(Transform parent)
-        {
-            if (parent == null)
-            {
-                if (SceneManager.CurrentScene == null)
-                    return;
-
-                SceneManager.CurrentScene.Scenegraph.Updated -= Update;
-                SceneManager.CurrentScene.Scenegraph.FixedUpdated -= FixedUpdate;
-                SceneManager.CurrentScene.Scenegraph.Drawed -= Draw;
-                SceneManager.CurrentScene.Scenegraph.Unloaded -= Unload;
-            }
-            else
-            {
-                parent.GameObject.Updated -= Update;
-                parent.GameObject.FixedUpdated -= FixedUpdate;
-                parent.GameObject.Drawed -= Draw;
-                parent.GameObject.Unloaded -= Unload;
-            }
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private void aquireComponents(Type aquiredType)
-        {
-            foreach (Attribute a in aquiredType.GetCustomAttributes(true))
-            {
-                if (a is RequireComponentAttribute)
-                {
-                    RequireComponentAttribute attribute = a as RequireComponentAttribute;
-                    for (int i = 0; i < components.Count; i++)
-                        if (components[i].GetType() == attribute.RequiredType)
-                            return;
-
-                    if (attribute.RequiredType != null)
-                    {
-                        AddComponent((Component)Activator.CreateInstance(attribute.RequiredType, this));
-                    }
-                }
-            }
-        }
-
-        private void Draw(DrawingEventArgs e)
-        {
-            Drawed?.Invoke(e);
-        }
-
-        private void FixedUpdate()
-        {
-            FixedUpdated?.Invoke();
-        }
-
-        private void LoadChildren(XmlReader reader, ComponentIndexer componentIndexer)
-        {
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Children")
-                    return;
-
-                if (reader.NodeType == XmlNodeType.Element)
-                    if (reader.Name == "GameObject")
-                    {
-                        GameObject g = new GameObject();
-                        g.Load(reader, this, componentIndexer, transform.Scenegraph);
-                    }
-            }
-        }
-
-        private void Unload()
-        {
-            Unloaded?.Invoke();
-        }
-
-        private void Update()
-        {
-            Updated?.Invoke();
+            return TagManager.CompareTag(this.tag, tag);
         }
 
         #endregion Private Methods

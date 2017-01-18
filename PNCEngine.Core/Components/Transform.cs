@@ -1,17 +1,14 @@
 ﻿using PNCEngine.Core.Attributes;
-using PNCEngine.Core.Interfaces;
-using PNCEngine.Core.Scenes;
 using PNCEngine.Utils;
 using SFML.System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 
 namespace PNCEngine.Core.Components
 {
     [SingleInstanceComponent]
-    public class Transform : Component, IEnumerable, IScenegraphElement
+    public class Transform : Component, IEnumerable
     {
         #region Protected Fields
 
@@ -24,18 +21,11 @@ namespace PNCEngine.Core.Components
 
         #endregion Protected Fields
 
-        #region Private Fields
-
-        private Scenegraph scenegraph;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public Transform(GameObject gameObject) : base(gameObject)
+        public Transform() : base()
         {
-            scenegraph = SceneManager.CurrentScene?.Scenegraph;
-            children = new List<Transform>();
+            Reset();
         }
 
         #endregion Public Constructors
@@ -44,15 +34,6 @@ namespace PNCEngine.Core.Components
 
         public int ChildCount { get { return children.Count; } }
         public Vector2f Down { get { return new Vector2f(sineOfRotation, -cosineOfRotation); } }
-
-        public IEnumerator Enumerator
-        {
-            get
-            {
-                return new InnerEnumerator(this);
-            }
-        }
-
         public Vector2f Left { get { return new Vector2f(-cosineOfRotation, -sineOfRotation); } }
         public Vector2f LocalPosition { get { return this.position; } set { this.position = value; } }
 
@@ -89,11 +70,9 @@ namespace PNCEngine.Core.Components
                 if (parent == value)
                     return;
 
-                GameObject.RemoveSubscriptions(parent);
                 parent?.children.Remove(this);
                 parent = value;
                 parent?.children.Add(this);
-                GameObject.AddSubscriptions(parent);
             }
         }
 
@@ -136,19 +115,6 @@ namespace PNCEngine.Core.Components
             }
         }
 
-        public Scenegraph Scenegraph
-        {
-            get
-            {
-                return scenegraph;
-            }
-            set
-            {
-                if (value != null)
-                    scenegraph = value;
-            }
-        }
-
         public Vector2f Up { get { return new Vector2f(-sineOfRotation, cosineOfRotation); } }
 
         #endregion Public Properties
@@ -160,9 +126,12 @@ namespace PNCEngine.Core.Components
             return children[index];
         }
 
-        public IEnumerator GetEnumerator()
+        public IEnumerator Enumerator
         {
-            return new InnerEnumerator(this);
+            get
+            {
+                return new InnerEnumerator(this);
+            }
         }
 
         public override void Reset()
@@ -225,27 +194,12 @@ namespace PNCEngine.Core.Components
             Translate(new Vector2f(x, y), relativeSpace);
         }
 
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal override void Load(XmlReader reader)
+        public IEnumerator GetEnumerator()
         {
-            float positionX, positionY, rotation, scaleX, scaleY;
-            float.TryParse(reader.GetAttribute("Position.X"), out positionX);
-            float.TryParse(reader.GetAttribute("Position.Y"), out positionY);
-            if (!float.TryParse(reader.GetAttribute("Scale.X"), out scaleX))
-                scaleX = 1;
-            if (!float.TryParse(reader.GetAttribute("Scale.Y"), out scaleY))
-                scaleY = 1;
-            float.TryParse(reader.GetAttribute("Rotation"), out rotation);
-
-            Rotation = rotation;
-            Position = new Vector2f(positionX, positionY);
-            scale = new Vector2f(scaleX, scaleY);
+            return new InnerEnumerator(this);
         }
 
-        #endregion Internal Methods
+        #endregion Public Methods
 
         #region Private Classes
 

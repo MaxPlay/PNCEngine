@@ -118,15 +118,14 @@ namespace PNCEngine.Assets
             textures = new Dictionary<long, TextureAsset>();
             audios = new Dictionary<long, AudioAsset>();
             fonts = new Dictionary<long, FontAsset>();
-            defaultTexture = new TextureAsset("Resources/default/default.png");
-            defaultAudio = new AudioAsset("Resources/default/default.ogg");
-            defaultFont = new FontAsset("Resources/default/default.ttf");
+            defaultTexture = new TextureAsset("Resources/Textures/default.png");
+            defaultAudio = new AudioAsset("Resources/Audio/default.ogg");
+            defaultFont = new FontAsset("Resources/Font/default.ttf");
             try
             {
                 defaultTexture.Load();
                 defaultAudio.Load();
                 defaultFont.Load();
-                Debug.Log("Default resources loaded.");
             }
             catch (FileNotFoundException e)
             {
