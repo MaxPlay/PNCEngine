@@ -4,9 +4,9 @@
     {
         #region Public Methods
 
-        void FixedUpdate(float elapsedTime);
+        void FixedUpdate();
 
-        void Update(float elapsedTime);
+        void Update();
 
         #endregion Public Methods
     }

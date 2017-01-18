@@ -33,9 +33,11 @@ namespace PNCEngine.Core
             new Debug();
             Debug.Log("Engine initialized.");
             new Settings();
+            window = new EngineWindow("PNCEngine");
             try
             {
                 AssetManager.Initialize();
+                SceneManager.TargetWindow = window;
                 SceneManager.Initialize();
             }
             catch (Exception e)
@@ -45,7 +47,6 @@ namespace PNCEngine.Core
             }
             clock = new Clock();
             fixedUpdateTime = 0.2f;
-            window = new EngineWindow("PNCEngine");
             window.SettingsChanged += Window_SettingsChanged;
         }
 
@@ -75,15 +76,15 @@ namespace PNCEngine.Core
             Debug.Instance.Save();
         }
 
-        public void Draw(Time elapsedTime)
+        public void Draw()
         {
             window.Clear();
-            SceneManager.Draw(elapsedTime.AsSeconds());
+            SceneManager.Draw();
         }
 
         public void FixedUpdate()
         {
-            SceneManager.FixedUpdate(elapsedFixedUpdateTime);
+            SceneManager.FixedUpdate();
         }
 
         public void Run()
@@ -97,7 +98,7 @@ namespace PNCEngine.Core
 
                 window.DispatchEvents();
                 Update(elapsedTime);
-                Draw(elapsedTime);
+                Draw();
                 window.Display();
             }
         }
@@ -108,9 +109,11 @@ namespace PNCEngine.Core
             if (elapsedFixedUpdateTime >= fixedUpdateTime)
             {
                 FixedUpdate();
+                GameTime.ElapsedFixedTime = elapsedFixedUpdateTime;
                 elapsedFixedUpdateTime = 0;
             }
-            SceneManager.Update(elapsedTime.AsSeconds());
+            GameTime.ElapsedTime = elapsedTime.AsSeconds();
+            SceneManager.Update();
         }
 
         #endregion Public Methods

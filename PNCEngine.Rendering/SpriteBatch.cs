@@ -169,7 +169,7 @@ namespace PNCEngine.Rendering
             sprites.Add(textSprite);
         }
 
-        public void DrawString(FontAsset asset, string text, Vector2f position, Color color, uint size, Text.Styles style, float rotation, TextOrigin origin)
+        public void DrawString(FontAsset asset, string text, Vector2f position, Color color, uint size, Text.Styles style, float rotation, Origin origin)
         {
             Text textSprite = new Text(text, asset.Resource, size);
             textSprite.Position = position;
@@ -180,38 +180,38 @@ namespace PNCEngine.Rendering
             Vector2f originPosition = new Vector2f();
             switch (origin)
             {
-                case TextOrigin.TopCenter:
+                case Origin.TopCenter:
                     originPosition.X = originRect.Width / 2f;
                     break;
 
-                case TextOrigin.TopRight:
+                case Origin.TopRight:
                     originPosition.X = originRect.Width;
                     break;
 
-                case TextOrigin.MiddleLeft:
+                case Origin.MiddleLeft:
                     originPosition.Y = originRect.Height / 2f;
                     break;
 
-                case TextOrigin.Center:
+                case Origin.Center:
                     originPosition.X = originRect.Width / 2f;
                     originPosition.Y = originRect.Height / 2f;
                     break;
 
-                case TextOrigin.MiddleRight:
+                case Origin.MiddleRight:
                     originPosition.X = originRect.Width;
                     originPosition.Y = originRect.Height / 2f;
                     break;
 
-                case TextOrigin.BottomLeft:
+                case Origin.BottomLeft:
                     originPosition.Y = originRect.Height;
                     break;
 
-                case TextOrigin.BottomCenter:
+                case Origin.BottomCenter:
                     originPosition.X = originRect.Width / 2f;
                     originPosition.Y = originRect.Height;
                     break;
 
-                case TextOrigin.BottomRight:
+                case Origin.BottomRight:
                     originPosition.X = originRect.Width;
                     originPosition.Y = originRect.Height;
                     break;
