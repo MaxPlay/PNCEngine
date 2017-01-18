@@ -1,9 +1,11 @@
 ﻿using PNCEngine.Assets;
+using PNCEngine.Core.Parser;
 using PNCEngine.Rendering;
 using PNCEngine.Utils;
 using PNCEngine.Utils.Exceptions;
 using SFML.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -11,6 +13,12 @@ namespace PNCEngine.Core.Scenes
 {
     public class Scene
     {
+        #region Public Fields
+
+        public const string extension = ".scene";
+
+        #endregion Public Fields
+
         #region Private Fields
 
         private string filename;
@@ -19,6 +27,7 @@ namespace PNCEngine.Core.Scenes
         private string name;
         private Scenegraph scenegraph;
         private SpriteBatch spriteBatch;
+        private List<GameObject> gameObjects;
 
         #endregion Private Fields
 
@@ -27,6 +36,7 @@ namespace PNCEngine.Core.Scenes
         public Scene()
         {
             scenegraph = new Scenegraph(spriteBatch);
+            gameObjects = new List<GameObject>();
         }
 
         public Scene(string name, string filename) : this()
@@ -59,14 +69,16 @@ namespace PNCEngine.Core.Scenes
 
         #region Public Methods
 
-        public void Draw(float elapsedTime)
+        public void Draw()
         {
-            scenegraph.Draw(elapsedTime);
+            spriteBatch.Begin();
+            scenegraph.Draw();
+            spriteBatch.End();
         }
 
-        public void FixedUpdate(float elapsedTime)
+        public void FixedUpdate()
         {
-            scenegraph.FixedUpdate(elapsedTime);
+            scenegraph.FixedUpdate();
         }
 
         public void Load()
@@ -113,14 +125,24 @@ namespace PNCEngine.Core.Scenes
             spriteBatch = null;
             GC.Collect();
             spriteBatch = new SpriteBatch(target);
+            scenegraph.SpriteBatch = spriteBatch;
         }
 
-        public void Update(float elapsedTime)
+        public void Update()
         {
-            scenegraph.Update(elapsedTime);
+            scenegraph.Update();
         }
 
         #endregion Public Methods
+
+        #region Internal Methods
+
+        internal void Unload()
+        {
+            scenegraph.Unload();
+        }
+
+        #endregion Internal Methods
 
         #region Private Methods
 
@@ -152,10 +174,22 @@ namespace PNCEngine.Core.Scenes
 
         private void LoadEntities(XmlReader reader)
         {
+            ComponentIndexer componentIndexer = new ComponentIndexer();
+
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.EndElement && reader.Name.ToLower() == "entities")
                     return;
+
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (reader.Name == "GameObject")
+                    {
+                        GameObject g = new GameObject();
+                        g.Load(reader, null, componentIndexer, scenegraph);
+                        gameObjects.Add(g);
+                    }
+                }
             }
         }
 

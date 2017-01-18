@@ -1,4 +1,6 @@
-﻿namespace PNCEngine.Core
+﻿using System.Xml;
+
+namespace PNCEngine.Core
 {
     public abstract class Component : EngineObject
     {
@@ -12,12 +14,22 @@
 
         #region Public Constructors
 
-        public Component()
-                           : base()
+        public Component(GameObject gameObject) : base()
         {
+            SetGameObject(gameObject);
+            Reset();
+            Initialize();
         }
 
         #endregion Public Constructors
+
+        #region Private Constructors
+
+        private Component()
+        {
+        }
+
+        #endregion Private Constructors
 
         #region Public Properties
 
@@ -73,8 +85,12 @@
 
         #region Internal Methods
 
-        internal void SetGameObject(GameObject gameObject)
+        internal abstract void Load(XmlReader reader);
+
+        internal virtual void SetGameObject(GameObject gameObject)
         {
+            if (gameObject == null)
+                return;
             this.gameObject = gameObject;
         }
 

@@ -4,7 +4,7 @@
     {
         #region Public Methods
 
-        void Draw(float elapsedTime);
+        void Draw();
 
         #endregion Public Methods
     }

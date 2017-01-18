@@ -19,6 +19,19 @@ namespace PNCEngine.Core.Scenes
 
         #region Public Properties
 
+        public static Scene CurrentScene
+        {
+            get
+            {
+                return currentScene;
+            }
+            set
+            {
+                currentScene.Unload();
+                currentScene = value;
+            }
+        }
+
         public static EngineWindow TargetWindow
         {
             get { return targetWindow; }
@@ -29,20 +42,23 @@ namespace PNCEngine.Core.Scenes
 
         #region Public Methods
 
-        public static void Draw(float elapsedTime)
+        public static void Draw()
         {
-            currentScene?.Draw(elapsedTime);
+            currentScene?.Draw();
         }
 
-        public static void FixedUpdate(float elapsedTime)
+        public static void FixedUpdate()
         {
-            currentScene?.FixedUpdate(elapsedTime);
+            currentScene?.FixedUpdate();
         }
 
         public static void Initialize()
         {
             scenes = new Dictionary<string, string>();
             Load();
+            Debug.Log("Scenes loaded.");
+
+            currentScene = LoadScene(startup);
         }
 
         public static Scene LoadScene(string name)
@@ -59,9 +75,9 @@ namespace PNCEngine.Core.Scenes
             return scene;
         }
 
-        public static void Update(float elapsedTime)
+        public static void Update()
         {
-            currentScene?.Update(elapsedTime);
+            currentScene?.Update();
         }
 
         #endregion Public Methods
@@ -88,8 +104,6 @@ namespace PNCEngine.Core.Scenes
                     }
                 }
             }
-
-            currentScene = LoadScene(startup);
         }
 
         #endregion Private Methods
