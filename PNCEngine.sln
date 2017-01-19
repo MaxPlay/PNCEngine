@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNCEngine.UI", "PNCEngine.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNCEngine.Assets", "PNCEngine.Assets\PNCEngine.Assets.csproj", "{7A33C5AC-FB8E-4A80-B6D0-B5AC5BB86CFC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zippit", "Zippit\Zippit.csproj", "{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{7A33C5AC-FB8E-4A80-B6D0-B5AC5BB86CFC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A33C5AC-FB8E-4A80-B6D0-B5AC5BB86CFC}.Release|x86.ActiveCfg = Release|Any CPU
 		{7A33C5AC-FB8E-4A80-B6D0-B5AC5BB86CFC}.Release|x86.Build.0 = Release|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Debug|x86.Build.0 = Debug|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|x86.ActiveCfg = Release|Any CPU
+		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

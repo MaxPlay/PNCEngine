@@ -1,7 +1,4 @@
-PNCEngine.Utils/obj/
-PNCEngine.UI/obj/
-PNCEngine/obj/
-PNCEngine/bin/
-PNCEngine.Rendering/obj/
-PNCEngine.Core/obj/
-PNCEngine.Assets/obj/
+#Ignore build directories
+**/obj/
+**/bin/
+build/
