@@ -5,3 +5,8 @@ PNCEngine/bin/
 PNCEngine.Rendering/obj/
 PNCEngine.Core/obj/
 PNCEngine.Assets/obj/
+PNCEngine.Utils/bin/
+PNCEngine.UI/bin/
+PNCEngine.Rendering/bin/
+PNCEngine.Assets/bin/
+PNCEngine.Core/bin/
