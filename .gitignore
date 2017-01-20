@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PNCEngine.Utils/obj/
 PNCEngine.UI/obj/
 PNCEngine/obj/
@@ -10,3 +11,9 @@ PNCEngine.UI/bin/
 PNCEngine.Rendering/bin/
 PNCEngine.Assets/bin/
 PNCEngine.Core/bin/
+=======
+#Ignore build directories
+**/obj/
+**/bin/
+build/
+>>>>>>> 4a7b5552178bb75e4a9d1be8c79c2415c7f8b95c
