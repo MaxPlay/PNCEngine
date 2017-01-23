@@ -25,7 +25,7 @@ namespace PNCEngine.Rendering
 
         public SpriteBatch(RenderTarget target)
         {
-            sprites = new List<Drawable>(100);
+            sprites = new List<Drawable>(50);
             this.target = target;
         }
 

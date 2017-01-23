@@ -63,6 +63,11 @@
     <Compile Include="Attributes\RequireComponentAttribute.cs" />
     <Compile Include="Attributes\SingleInstanceComponentAttribute.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="Components\Animation\Animator.cs" />
+    <Compile Include="Components\Audio\AudioListener.cs" />
+    <Compile Include="Components\Audio\AudioSource.cs" />
+    <Compile Include="Components\Effects\ParticleSystem.cs" />
+    <Compile Include="Components\Rendering\Camera.cs" />
     <Compile Include="Components\Rendering\Renderer.cs" />
     <Compile Include="Components\Rendering\Sprite.cs" />
     <Compile Include="Components\Rendering\SpriteRenderer.cs" />

@@ -16,10 +16,15 @@ namespace PNCEngine.Core.Components
         #region Protected Fields
 
         protected List<Transform> children;
+
         protected float cosineOfRotation, sineOfRotation;
+
         protected Transform parent;
+
         protected Vector2f position;
+
         protected float rotation;
+
         protected Vector2f scale;
 
         #endregion Protected Fields
@@ -40,6 +45,18 @@ namespace PNCEngine.Core.Components
 
         #endregion Public Constructors
 
+        #region Public Delegates
+
+        public delegate void TransformUpdatedEventHandler();
+
+        #endregion Public Delegates
+
+        #region Public Events
+
+        public event TransformUpdatedEventHandler ValuesChanged;
+
+        #endregion Public Events
+
         #region Public Properties
 
         public int ChildCount { get { return children.Count; } }
@@ -54,7 +71,16 @@ namespace PNCEngine.Core.Components
         }
 
         public Vector2f Left { get { return new Vector2f(-cosineOfRotation, -sineOfRotation); } }
-        public Vector2f LocalPosition { get { return this.position; } set { this.position = value; } }
+
+        public Vector2f LocalPosition
+        {
+            get { return position; }
+            set
+            {
+                position = value;
+                OnValuesChanged();
+            }
+        }
 
         public float LocalRotation
         {
@@ -64,17 +90,26 @@ namespace PNCEngine.Core.Components
                 rotation = value;
                 sineOfRotation = (float)Math.Sin(rotation);
                 cosineOfRotation = (float)Math.Cos(rotation);
+                OnValuesChanged();
             }
         }
 
-        public Vector2f LocalScale { get { return scale; } set { scale = value; } }
+        public Vector2f LocalScale
+        {
+            get { return scale; }
+            set
+            {
+                scale = value;
+                OnValuesChanged();
+            }
+        }
 
         public Vector2f LossyScale
         {
             get
             {
                 if (parent == null)
-                    return this.scale;
+                    return scale;
                 if (parent.LossyScale == new Vector2f())
                     return new Vector2f();
                 return new Vector2f(scale.X / parent.LossyScale.X, scale.Y / parent.LossyScale.Y);
@@ -111,6 +146,7 @@ namespace PNCEngine.Core.Components
             set
             {
                 position = value;
+                OnValuesChanged();
             }
         }
 
@@ -133,6 +169,7 @@ namespace PNCEngine.Core.Components
 
                 sineOfRotation = (float)Math.Sin(rotation);
                 cosineOfRotation = (float)Math.Cos(rotation);
+                OnValuesChanged();
             }
         }
 
@@ -172,6 +209,7 @@ namespace PNCEngine.Core.Components
             scale = new Vector2f(1, 1);
             sineOfRotation = (float)Math.Sin(rotation);
             cosineOfRotation = (float)Math.Cos(rotation);
+            OnValuesChanged();
         }
 
         public Transform Root()
@@ -185,23 +223,27 @@ namespace PNCEngine.Core.Components
         public void Rotate(float degrees)
         {
             rotation += MathHelper.ToRadians(degrees);
+            OnValuesChanged();
         }
 
         public void Scale(Vector2f scale)
         {
             this.scale.X *= scale.X;
             this.scale.Y *= scale.Y;
+            OnValuesChanged();
         }
 
         public void Scale(float scale)
         {
             this.scale *= scale;
+            OnValuesChanged();
         }
 
         public void Scale(float x, float y)
         {
             scale.X *= x;
             scale.Y *= y;
+            OnValuesChanged();
         }
 
         public override string ToString()
@@ -218,6 +260,7 @@ namespace PNCEngine.Core.Components
                         cosineOfRotation * translation.X - sineOfRotation * translation.Y,
                         sineOfRotation * translation.X + cosineOfRotation * translation.Y
                     );
+            OnValuesChanged();
         }
 
         public void Translate(float x, float y, Space relativeSpace = Space.World)
@@ -246,6 +289,15 @@ namespace PNCEngine.Core.Components
         }
 
         #endregion Internal Methods
+
+        #region Protected Methods
+
+        protected void OnValuesChanged()
+        {
+            ValuesChanged?.Invoke();
+        }
+
+        #endregion Protected Methods
 
         #region Private Classes
 

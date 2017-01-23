@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using PNCEngine.Core.Components;
+using System.Xml;
 
 namespace PNCEngine.Core
 {
@@ -51,6 +52,8 @@ namespace PNCEngine.Core
                 gameObject.Tag = value;
             }
         }
+
+        public Transform Transform { get { return gameObject.Transform; } }
 
         #endregion Public Properties
 

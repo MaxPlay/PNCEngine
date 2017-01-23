@@ -53,6 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="AnimationAsset.cs" />
     <Compile Include="Assetmanager.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="AudioAsset.cs" />

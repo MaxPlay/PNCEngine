@@ -1,4 +1,5 @@
 ﻿using PNCEngine.Assets;
+using PNCEngine.Core.Components.Rendering;
 using PNCEngine.Core.Scenes;
 using PNCEngine.Exceptions;
 using PNCEngine.Utils;
@@ -78,7 +79,10 @@ namespace PNCEngine.Core
 
         public void Draw()
         {
-            window.Clear();
+            if (Camera.Main == null)
+                window.Clear();
+            else
+                window.Clear(Camera.Main.BackgroundColor);
             SceneManager.Draw();
         }
 
