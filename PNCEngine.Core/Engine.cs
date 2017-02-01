@@ -43,7 +43,7 @@ namespace PNCEngine.Core
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e);
                 running = false;
             }
             clock = new Clock();

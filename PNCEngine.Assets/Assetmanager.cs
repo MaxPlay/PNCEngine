@@ -38,7 +38,7 @@ namespace PNCEngine.Assets
             catch (FileNotFoundException e)
             {
                 Debug.LogError("Asset couldn't be loaded. Exception thrown:");
-                Debug.LogError(e.Message);
+                Debug.LogError(e);
                 return -1;
             }
         }
@@ -61,7 +61,7 @@ namespace PNCEngine.Assets
             catch (FileNotFoundException e)
             {
                 Debug.LogError("Asset couldn't be loaded. Exception thrown:");
-                Debug.LogError(e.Message);
+                Debug.LogError(e);
                 return -1;
             }
         }
@@ -84,7 +84,7 @@ namespace PNCEngine.Assets
             catch (FileNotFoundException e)
             {
                 Debug.LogError("Asset couldn't be loaded. Exception thrown:");
-                Debug.LogError(e.Message);
+                Debug.LogError(e);
                 return -1;
             }
         }
@@ -130,7 +130,7 @@ namespace PNCEngine.Assets
             }
             catch (FileNotFoundException e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e);
                 throw new NotInitializedException("The default resources couldn't be found. They are required to run the application. Assetmanager initialization cancelled.");
             }
         }
