@@ -1,4 +1,6 @@
-﻿namespace PNCEngine.Assets
+﻿using PNCEngine.Animations;
+
+namespace PNCEngine.Assets
 {
     public class AnimationAsset : Asset<Animation>
     {

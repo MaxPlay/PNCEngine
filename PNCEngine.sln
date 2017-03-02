@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNCEngine.Assets", "PNCEngi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zippit", "Zippit\Zippit.csproj", "{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNCEngine.Animations", "PNCEngine.Animation\PNCEngine.Animations.csproj", "{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|x86.ActiveCfg = Release|Any CPU
 		{C28DC4F0-8423-4232-80CC-F5873FFDCD9E}.Release|x86.Build.0 = Release|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B3DE8CA-117D-4F3E-A8F0-80AB24863E5B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

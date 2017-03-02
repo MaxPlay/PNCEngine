@@ -57,7 +57,7 @@
 
         protected void assignNewID()
         {
-            this.id = nextID++;
+            id = nextID++;
         }
 
         #endregion Protected Methods

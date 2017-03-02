@@ -92,9 +92,22 @@ namespace PNCEngine.Core.Scenes
             {
                 using (XmlReader reader = XmlReader.Create(stream))
                 {
-                    LoadTextures(reader);
-                    LoadAudio(reader);
-                    LoadEntities(reader);
+                    while (reader.Read())
+                    {
+                        if(reader.NodeType == XmlNodeType.Element)
+                            switch (reader.Name.ToLower())
+                            {
+                                case "textures":
+                                    LoadTextures(reader);
+                                    break;
+                                case "audio":
+                                    LoadAudio(reader);
+                                    break;
+                                case "entities":
+                                    LoadEntities(reader);
+                                    break;
+                            }
+                    }
                 }
             }
         }
